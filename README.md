@@ -21,3 +21,19 @@ Using a 8gb 4 core Linux box, the indexing time is roughly 1 day per 1,5 bn rows
 
                 rm "$KEY1".temp
         done <indexer.key1
+        
+        
+#### how to retrieve data from the index you have built      
+        
+    while read DOMAIN; do
+	KEY1=$(echo $DOMAIN | colrm 2)
+	KEY2=$(echo $DOMAIN | colrm 3 | rev | colrm 2)
+	KEY1C=$(echo $KEY1 | tr '[a-z]' '[A-Z]')
+	KEY2C=$(echo $KEY2 | tr '[a-z]' '[A-Z]')
+
+	KEY=$(echo -e "$KEY1""$KEY2" "$KEY1C""$KEY2" "$KEY1C""$KEY2C" "$KEY1""$KEY2")
+    COUNT=$(grep -i -s $DOMAIN $KEY | wc -l)
+
+	echo -e "$DOMAIN \t $COUNT"
+
+done <input.txt
